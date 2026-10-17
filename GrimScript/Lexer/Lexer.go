@@ -1,7 +1,4 @@
-package grimscript
-
-
-
+package lexer
 type Lexer struct {
 	input string
 	position int
@@ -26,48 +23,87 @@ func (l *Lexer) readChar() {
 }
 
 
-func (l *Lexer) NextToken() token.Token {
-	var tok token.Token
+func (l *Lexer) NextToken() Token {
+	var tok Token
 	l.skipWhitespace()
-
+	if isLetter(l.ch) {
+		tok.Literal = l.readIdentifier()
+		if tokType, ok := keywords[tok.Literal]; ok {
+			tok.Type = tokType
+		} else {
+			tok.Type = IDENT
+		}
+		return tok
+	}
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
+		tok = newToken(ASSIGN, l.ch)
 	case '+':
-		tok = newToken(token.PLUS, l.ch)
+		tok = newToken(PLUS, l.ch)
 	case '-':
-		tok = newToken(token.REMOVAL, l.ch)
+		tok = newToken(REMOVAL, l.ch)
 	case '*':
-		tok = newToken(token.MULTIPLICATION, l.ch)
+		tok = newToken(MULTIPLICATION, l.ch)
 	case '/':
-		tok = newToken(token.DIVISION, l.ch)
+		tok = newToken(DIVISION, l.ch)
 	case '(':
-		tok = newToken(token.LPAREN, l.ch)
+		tok = newToken(LPAREN, l.ch)
 	case ')':
-		tok = newToken(token.RPAREN, l.ch)
+		tok = newToken(RPAREN, l.ch)
 	case '{':
-		tok = newToken(token.LBRACE, l.ch)
+		tok = newToken(LBRACE, l.ch)
 	case '}':
-		tok = newToken(token.RBRACE, l.ch)
+		tok = newToken(RBRACE, l.ch)
 	case ',':
-		tok = newToken(token.COMMA, l.ch)
+		tok = newToken(COMMA, l.ch)
 	case ';':
-		tok = newToken(token.SEMICOLON, l.ch)
+		tok = newToken(SEMICOLON, l.ch)
 	case 0:
 		tok.Literal = ""
-		tok.Type = token.EOF
+		tok.Type = EOF
 	default:
-		tok = newToken(token.ILLEGAL, l.ch)
+		tok = newToken(ILLEGAL, l.ch)
 	}
 	l.readChar()
 	return tok
 }
-func newToken(tokenType token.TokenType, ch byte) token.Token {
-	return token.Token{Type: tokenType, Literal: string(ch)}
+func newToken(tokenType TokenType, ch byte) Token {
+	return Token{Type: tokenType, Literal: string(ch)}
 }
 
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
+}
+
+var keywords = map[string]TokenType{
+    "let":     LET,
+    "println": PRINTLN,
+    "scanln":  SCANLN,
+    "func":    FUNC,
+}
+
+func isLetter(ch byte) bool {
+    return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+func (l *Lexer) readIdentifier() string {
+    position := l.position
+    for isLetter(l.ch) {
+        l.readChar()
+    }
+    return l.input[position:l.position]
+}
+
+func isDigit(ch byte) bool {
+    return '0' <= ch && ch <= '9'
+}
+
+func (l *Lexer) readNumber() string {
+    position := l.position
+    for isDigit(l.ch) {
+        l.readChar()
+    }
+    return l.input[position:l.position]
 }

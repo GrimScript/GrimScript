@@ -1,6 +1,5 @@
 package lexer
 
-
 type TokenType string
 
 type Token struct {
@@ -33,5 +32,6 @@ const (
 	LET = "LET"
 	PRINTLN = "PRINTLN"
 	SCANLN = "SCANLN"
+	FUNC = "FUNC"
 
 )
