@@ -1,13 +1,13 @@
 
 # GrimScript
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
 GrimScript is a fast, easy-to-learn new programming language.
 
-## Badges
 
 
 
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+
 
 
 
