@@ -32,7 +32,7 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN)
+		tok = newToken(token.ASSIGN, l.ch)
 	case '+':
 		tok = newToken(token.PLUS, l.ch)
 	case '-':
