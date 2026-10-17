@@ -1,5 +1,6 @@
 # test
 
-bash
 '''
+bash
 go test -v ./... 
+'''
