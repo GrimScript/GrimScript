@@ -34,6 +34,11 @@ func (l *Lexer) NextToken() Token {
 			tok.Type = IDENT
 		}
 		return tok
+	
+	} else if isDigit(l.ch) {
+		tok.Type = INT
+		tok.Literal = l.readNumber()
+		return tok
 	}
 	switch l.ch {
 	case '=':
